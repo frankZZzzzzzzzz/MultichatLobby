@@ -1,0 +1,44 @@
+.app{
+    margin: 0 0 0 0;
+}
+#navigation-bar{
+    display: flex;
+    background-color: rgb(86, 86, 86);
+    margin: 0 0 0 0;
+    padding: 10px 10px 10px 10px;
+    gap: 10px;
+}
+#navigation-bar .navigation-button{
+    background-color: rgb(147, 147, 147);
+    color: black;
+}
+#chat-lobbies{
+    display: grid;
+    height: 100vh;
+    background-color: black;
+
+    padding: 0px 10px 0px 10px;
+    overflow-y: auto;
+
+    color:white;
+}
+#chat-lobbies::-webkit-scrollbar{
+    width: auto;
+}
+#chat-lobbies::-webkit-scrollbar-track{
+    display: none;
+}
+#chat-lobbies::-webkit-scrollbar-thumb{
+    background-color: rgb(37, 37, 37);
+}
+#chat-lobbies::-webkit-scrollbar-thumb:hover{
+    background-color: rgb(65, 65, 65);
+}
+.message-area{
+    display: grid;
+    height: 100vh;
+    flex-grow: 1;
+    background-color: rgb(44, 44, 44);
+
+    color:white;
+}
