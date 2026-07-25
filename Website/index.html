@@ -6,11 +6,18 @@
     <div id="navigation-bar">
         <button class="navigation-button" id="create-lobby">Create Lobby</button>
         <button class="navigation-button" id="search-lobby">Search Lobby</button>
+        <div class="right-side">
+            <div style="color: white">Refresh</div>
+            <div id="input-background">
+                <input type="text" id="set-refresh-time" maxlength="4">
+                <span class="hint">ms</span>
+            </div>
+        </div>
     </div>
     <div id="user-area">
-        <div id="chat-lobbies"></div>
+        <div id="chat-lobbies" class="custom-scrollbar"></div>
         <div id="message-area">
-            <textarea id="messages" disabled></textarea>
+            <textarea id="messages" class="custom-scrollbar" disabled></textarea>
             <textarea id="text-input" placeholder="Write some text!"></textarea>
         </div>
     </div>

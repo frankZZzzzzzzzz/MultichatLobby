@@ -1,9 +1,12 @@
+require("dotenv").config();
+
 const path = require("path");
 const express = require("express");
 
 const app = express();
 let offset = 0;
 const Lobbies = new Map();
+const MAX_MESSAGES = process.env.MAX_STORED_MESSAGES || 1000;
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../Website")));
@@ -51,7 +54,10 @@ app.post('/uploadMessage', (req, res) => {
         })
     }
 
-    Lobbies.get(id).push(message);
+    const messageArray = Lobbies.get(id);
+    messageArray.push(message);
+    if (messageArray.length > 50)
+        messageArray.shift();
 
     res.json({id: id, status: "ok", messages: ["idk"]});
 });
