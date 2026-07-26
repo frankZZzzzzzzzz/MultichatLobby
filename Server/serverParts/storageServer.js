@@ -1,7 +1,7 @@
 require("dotenv").config();
 const net = require("net");
 
-const MAX_MESSAGES = Number(process.env.MAX_STORED_MESSAGES) || 1000;
+const MAX_MESSAGES = Number(process.env.MAX_STORED_MESSAGES) || 500;
 const DATABASE_PORT = Number(process.env.DATABASE_PORT) || 3000;
 
 let offset = 0;
@@ -68,8 +68,7 @@ function handleAction(socket, data){
 server.on("connection", (socket)=>{
     //Add client to list if connected and send all data for caching
     clients.add(socket);
-    //const obj = {action: "Load Cache", lobbies: Object.fromEntries(lobbies)};
-    //socket.write(JSON.stringify(obj) + "\n");
+    console.log(`Socket Connected: ${socket.address()}`);
 
     //Remove client from list if connection has been closed or error
     socket.on("close", ()=>clients.delete(socket));
