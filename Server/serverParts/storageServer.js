@@ -24,7 +24,7 @@ function handleAction(socket, data){
     log("Storage TCP receive");
     switch(data.action){
         case "upload": 
-            if (!lobbies.has(data.id)){
+            if (!lobbies.has(Number(data.id))){
                 console.log(`${(new Date).toISOString}: Attempted to upload to non-existent Lobby (#${data.id}). Message: ${data.message}`);
                 socket.write(JSON.stringify({
                     ...data,
@@ -32,7 +32,7 @@ function handleAction(socket, data){
                 }) + "\n")
                 return;
             }
-            const lobbyMessages = lobbies.get(data.id);
+            const lobbyMessages = lobbies.get(Number(data.id));
             lobbyMessages.push(data.message);
 
             if (lobbyMessages.length > MAX_MESSAGES)
@@ -45,7 +45,7 @@ function handleAction(socket, data){
             }) + "\n")
 
             broadcast({
-                id: data.id,
+                id: Number(data.id),
                 action: "updatedMessages",
                 messages: lobbyMessages
             }, socket);

@@ -93,10 +93,10 @@ function handleAction(lobbyInfo){
     else{
         switch(lobbyInfo.action){
             case "updatedMessages":
-                lobbies.set(lobbyInfo.id, lobbyInfo.messages);
+                lobbies.set(Number(lobbyInfo.id), lobbyInfo.messages);
                 break;
             case "newLobby":
-                lobbies.set(lobbyInfo.id, lobbyInfo.messages);
+                lobbies.set(Number(lobbyInfo.id), lobbyInfo.messages);
                 break;
         }
     }
@@ -160,7 +160,7 @@ app.get('/newLobby', async (req, res) => {
     } catch(error){
         console.log("New lobby error")
     }
-    lobbies.set(newLobbyData.id, newLobbyData.messages);
+    lobbies.set(Number(newLobbyData.id), newLobbyData.messages);
     res.json(newLobbyData);
 });
 app.post('/uploadMessage', async (req, res) => {
@@ -183,7 +183,7 @@ app.post('/uploadMessage', async (req, res) => {
     } catch (error){
         console.log("Error");
     }
-    lobbies.set(newData.id, newData.messages);
+    lobbies.set(Number(newData.id), newData.messages);
     res.json(newData);
 });
 app.get("/hostname", (req, res)=>{
