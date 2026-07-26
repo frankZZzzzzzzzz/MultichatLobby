@@ -8,7 +8,7 @@ const net = require("net");
 const lobbies = new Map();
 
 //TCP connect to Server
-const client = net.createConnection(Number(process.env.DATABASE_PORT) || 80, "10.0.0.235");
+const client = net.createConnection(Number(process.env.DATABASE_PORT), process.env.DATABASE_IP);
 const specificRequests = new Map();
 let responseIDCounter = 0;
 
