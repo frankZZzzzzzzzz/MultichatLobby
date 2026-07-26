@@ -19,6 +19,9 @@ html, body{
     background-color: rgb(147, 147, 147);
     color: black;
 }
+#host-name-area{
+    resize: none;
+}
 .right-side{
     display: grid;
     margin-left: auto;
@@ -29,6 +32,7 @@ html, body{
     margin-left: 3px;
     display: grid;
     grid-template-columns: 1fr auto;
+    align-items: center;
     justify-content: center;
 
     background-color: rgb(141, 141, 141);
@@ -48,6 +52,7 @@ html, body{
     border-left: 1px solid black;
     margin-left: auto;
     padding: 0 3px 0 3px;
+    justify-content: center;
     
     color: white;
 }

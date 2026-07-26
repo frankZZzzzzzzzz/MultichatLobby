@@ -1,14 +1,19 @@
 require("dotenv").config();
 
-const path = require("path");
-const express = require("express");
 const net = require("net");
+
+const express = require("express");
+const path = require("path");
+const os = require("os");
+
+const DATABASE_PORT = Number(process.env.DATABASE_PORT) || 80;
+const DATABASE_IP = process.env.DATABASE_IP || "localhost"
 
 //Local Cache
 const lobbies = new Map();
 
 //TCP connect to Server
-const client = net.createConnection(Number(process.env.DATABASE_PORT), process.env.DATABASE_IP);
+const client = net.createConnection(DATABASE_PORT, DATABASE_IP);
 const specificRequests = new Map();
 let responseIDCounter = 0;
 
@@ -135,4 +140,7 @@ app.post('/uploadMessage', async (req, res) => {
 
     res.json(newData);
 });
+app.get("/hostname", (req, res)=>{
+    res.json({ hostName: os.hostname() });
+})
 app.listen(3000, () => console.log('http://localhost:3000'));

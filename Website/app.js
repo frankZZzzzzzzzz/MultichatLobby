@@ -177,6 +177,17 @@ async function refreshMessages(){
         loadLobbyMessages(data.messages);
     refreshMessagePoller = setTimeout(refreshMessages, refreshMessageTime)
 }
+async function getHostName(){
+    let data;
+    try{
+        const response = await fetch(`${API_URL}/hostname`);
+        data = await response.json()
+    } catch(error){
+        alert("Could not get Host Name");
+    }
+    const hostNameArea = document.getElementById("host-name-area");
+    hostNameArea.value = `HostName: ${data.hostName}`;
+}
 function changeRefreshTime(ms){
     refreshMessageTime = ms;
 }
@@ -220,6 +231,7 @@ window.addEventListener("load", ()=>{
     addLobbytoList({id: 1000, messages: ['sdifjsfslkfsef']});
     refreshInput.value = refreshMessageTime;
     refreshMessages();
+    getHostName();
 });
 window.addEventListener("beforeunload", ()=>{
     if (refreshMessagePoller !== null)
