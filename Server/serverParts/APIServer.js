@@ -8,6 +8,7 @@ const os = require("os");
 
 const DATABASE_PORT = Number(process.env.DATABASE_PORT) || 3000;
 const DATABASE_IP = process.env.DATABASE_IP || "localhost"
+const API_SERVER_PORT = Number(process.env.API_SERVER_PORT) || 3000;
 
 //Local Cache
 const lobbies = new Map();
