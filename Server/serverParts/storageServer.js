@@ -18,7 +18,7 @@ function broadcast(objData, exceptionSocket=null){
     clients.forEach((clientSocket)=>{
         if (clientSocket !== exceptionSocket)
             clientSocket.write(JSON.stringify(objData) + "\n");
-    })
+    });
 }
 function handleAction(socket, data){
     log("Storage TCP receive");
@@ -62,7 +62,7 @@ function handleAction(socket, data){
                 lobbies: Object.fromEntries(lobbies)
             }
             socket.write(JSON.stringify(returnData) + "\n")
-            log("Storage TCP send cache");
+            log("Storage TCP sent cache");
             break;
     }
 

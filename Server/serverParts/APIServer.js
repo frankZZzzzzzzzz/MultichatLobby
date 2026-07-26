@@ -5,6 +5,7 @@ const net = require("net");
 const express = require("express");
 const path = require("path");
 const os = require("os");
+const hostName = os.hostname();
 
 const DATABASE_PORT = Number(process.env.DATABASE_PORT) || 3000;
 const DATABASE_IP = process.env.DATABASE_IP || "localhost"
@@ -88,6 +89,7 @@ function sendAndWaitforResponse(data, maxWaitTime = 1000){
         }, maxWaitTime);
         specificRequests.set(requestId, {
             resolve: (data)=>{
+                log(data);
                 clearTimeout(timer);
                 resolve(data);
             }
@@ -161,7 +163,7 @@ app.post('/uploadMessage', async (req, res) => {
 });
 app.get("/hostname", (req, res)=>{
     //log("HOSTNAME get");
-    res.json({ hostName: os.hostname() });
+    res.json({ hostName: hostName });
     //log("HOSTNAME receive");
 })
 app.listen(API_SERVER_PORT, () => console.log(`http://localhost:${API_SERVER_PORT}`));
