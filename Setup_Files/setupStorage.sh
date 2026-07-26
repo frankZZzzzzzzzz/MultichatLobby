@@ -6,7 +6,7 @@ set -e
 # Configuration
 # =========================
 
-REPO_URL="https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git"
+REPO_URL="https://github.com/frankZZzzzzzzzz/MultichatLobby"
 PROJECT_DIR="$HOME/multichat-lobby"
 
 # =========================
