@@ -4,7 +4,7 @@ set -e
 
 # Configuration 
 export DATABASE_IP=100.100.100.100
-export DATABASE_PORT=80
+export DATABASE_PORT=3000
 
 REPO_URL="https://github.com/frankZZzzzzzzzz/MultichatLobby"
 PROJECT_DIR="$HOME/multichat-lobby"

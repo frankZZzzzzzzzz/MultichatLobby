@@ -3,7 +3,7 @@
 set -e
 
 # Configuration
-export DATABASE_PORT=80
+export DATABASE_PORT=3000
 export MAX_STORED_MESSAGES=500
 
 REPO_URL="https://github.com/frankZZzzzzzzzz/MultichatLobby"

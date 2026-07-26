@@ -2,7 +2,7 @@ require("dotenv").config();
 const net = require("net");
 
 const MAX_MESSAGES = Number(process.env.MAX_STORED_MESSAGES) || 1000;
-const DATABASEPORT = Number(process.env.DATABASE_PORT) || 80;
+const DATABASEPORT = Number(process.env.DATABASE_PORT) || 3000;
 
 let offset = 0;
 const lobbies = new Map();

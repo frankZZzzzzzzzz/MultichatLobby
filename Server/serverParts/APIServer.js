@@ -6,7 +6,7 @@ const express = require("express");
 const path = require("path");
 const os = require("os");
 
-const DATABASE_PORT = Number(process.env.DATABASE_PORT) || 80;
+const DATABASE_PORT = Number(process.env.DATABASE_PORT) || 3000;
 const DATABASE_IP = process.env.DATABASE_IP || "localhost"
 
 //Local Cache
