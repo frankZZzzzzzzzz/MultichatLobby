@@ -43,19 +43,22 @@ client.on("data", (data)=>{
     
     allLobbiesInfo.forEach((lobby)=>{
         const lobbyInfo = JSON.parse(lobby);
+        log(lobbyInfo.requestID || lobbyInfo.action);
 
         //Handle specific requests/responses
         if (specificRequests.has(lobbyInfo.requestId)){
             specificRequests.get(lobbyInfo.requestId).resolve(lobbyInfo);
             specificRequests.delete(lobbyInfo.requestId);
         } //Handle broad responses
-        else
+        else{
             switch(lobbyInfo.action){
                 case "updatedMessages":
                     const id = lobbyInfo.id;
                     const messages = lobbyInfo.messages;
                     lobbies.set(id, messages);
                     break;
+
+            }
         }
     });
 });
