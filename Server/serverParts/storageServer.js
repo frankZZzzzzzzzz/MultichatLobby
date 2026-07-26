@@ -26,35 +26,49 @@ function handleAction(socket, data){
         case "upload": 
             if (!lobbies.has(data.id)){
                 console.log(`${(new Date).toISOString}: Attempted to upload to non-existent Lobby (#${data.id}). Message: ${data.message}`);
+                socket.write(JSON.stringify({
+                    ...data,
+                    message: "Lobby does not exist"
+                }) + "\n")
                 return;
             }
             const lobbyMessages = lobbies.get(data.id);
             lobbyMessages.push(data.message);
+
             if (lobbyMessages.length > MAX_MESSAGES)
                 lobbyMessages.shift();
 
-            const newData = {
+            socket.write(JSON.stringify({
                 ...data,
                 action: "updatedMessages",
                 messages: lobbyMessages
-            }
-            socket.write(JSON.stringify(newData) + "\n")
-            broadcast(newData, socket);
+            }) + "\n")
+
+            broadcast({
+                id: data.id,
+                action: "updatedMessages",
+                messages: lobbyMessages
+            }, socket);
+
             log("Storage TCP send upload");
             break;
         case "newLobby":
-            const newLobbyData = {
+            lobbies.set(offset, [`Lobby #: ${offset} first message!`]);
+            
+            socket.write(JSON.stringify({
                 ...data,
                 id: offset, 
                 action: "newLobby", 
-                messages: [`Lobby #: ${offset} first message!`]
-            }
-            lobbies.set(offset, newLobbyData.messages);
-            
-            socket.write(JSON.stringify(newLobbyData) + "\n")
-            broadcast(newLobbyData);
-            offset++;
+                messages: lobbies.get(offset)
+            }) + "\n")
+
+            broadcast({
+                id: offset, 
+                action: "newLobby", 
+                messages: lobbies.get(offset)
+            }, socket);
             log("Storage TCP send new lobby");
+            offset++;
             break;
         case "load Cache":
             const returnData = {

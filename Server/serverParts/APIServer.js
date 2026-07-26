@@ -10,71 +10,97 @@ const hostName = os.hostname();
 const DATABASE_PORT = Number(process.env.DATABASE_PORT) || 3000;
 const DATABASE_IP = process.env.DATABASE_IP || "localhost"
 const API_SERVER_PORT = Number(process.env.API_SERVER_PORT) || 3000;
+const RETRY_INTERVAL = Number(process.env.RETRY_INTERVAL) || 10_000;
 
 //Local Cache
 const lobbies = new Map();
 
 //TCP connect to Server
-const client = net.createConnection(DATABASE_PORT, DATABASE_IP);
 const specificRequests = new Map();
+let client = null;
 let responseIDCounter = 0;
+let connected = false;
 
 function log(message){
     console.log(`${(new Date).toISOString()}: ${message}`);
 }
-client.on("connect", async ()=>{
-    lobbies.clear();
-    console.log("Connected");
+function startRetryConnecting(){
+    setInterval(()=>client = net.createConnection(DATABASE_PORT, DATABASE_IP), 10_000);
+}
+function connectToDatabase(){
+    if (client)
+        client.destroy();
 
-    //Get Cache 
-    const cacheData = await sendAndWaitforResponse({action: "load Cache"});
-    Object.entries(cacheData.lobbies).forEach(([id, messages])=>{
-        lobbies.set(Number(id), messages);
-    })
-    console.log(lobbies)
-});
+    client = net.createConnection(DATABASE_PORT, DATABASE_IP);
 
-let dataInBuffer = "";
-client.on("data", (data)=>{
-    log("TCP Receive: " + data.toString());
-    
-    dataInBuffer += data.toString();
-    const allLobbiesInfo = dataInBuffer.split("\n");
-    dataInBuffer = allLobbiesInfo.pop();
-    
-    allLobbiesInfo.forEach((lobby)=>{
-        const lobbyInfo = JSON.parse(lobby);
-        log(lobbyInfo.requestID || lobbyInfo.action);
+    client.on("connect", async ()=>{
+        connected = true;
 
-        //Handle specific requests/responses
-        if (specificRequests.has(lobbyInfo.requestId)){
-            specificRequests.get(lobbyInfo.requestId).resolve(lobbyInfo);
-            specificRequests.delete(lobbyInfo.requestId);
-        } //Handle broad responses
-        else{
-            switch(lobbyInfo.action){
-                case "updatedMessages":
-                    const id = lobbyInfo.id;
-                    const messages = lobbyInfo.messages;
-                    lobbies.set(id, messages);
-                    break;
+        lobbies.clear();
+        console.log("Connected");
 
-            }
-        }
+        //Get Cache 
+        const cacheData = await sendAndWaitforResponse({action: "load Cache"});
+        Object.entries(cacheData.lobbies).forEach(([id, messages])=>{
+            lobbies.set(Number(id), messages);
+        })
+        console.log(lobbies)
     });
-});
-client.on("error", (err) => {
-    console.log("Database TCP error:", err.message);
-});
-client.on("close", () => {
-    console.log("Database TCP connection closed");
 
-    // Delete all specific requests
-    for (const [, request] of specificRequests) {
-        request.reject(new Error("TCP connection closed"));
+    //Handles Incoming data
+    let dataInBuffer = "";
+    client.on("data", (data)=>{
+        log("TCP Receive: " + data.toString());
+        
+        dataInBuffer += data.toString();
+        const messages = dataInBuffer.split("\n");
+        dataInBuffer = messages.pop();
+        
+        messages.forEach((message)=>{
+            const lobbyInfo = JSON.parse(message);
+            handleAction(lobbyInfo);
+        });
+    });
+    client.on("error", (err) => {
+        console.log("Database TCP error:", err.message);
+    });
+    client.on("close", () => {
+        console.log("Database TCP connection closed");
+
+        // Delete all specific requests
+        for (const [, request] of specificRequests) {
+            request.reject(new Error("TCP connection closed"));
+        }
+        specificRequests.clear();
+        tryReconnecting();
+    });
+}
+function tryReconnecting(){
+    if (connected)
+        return;
+
+    log(`Attempting to connect in ${RETRY_INTERVAL/1000} seconds`);
+    setTimeout(()=>connectToDatabase(), RETRY_INTERVAL);
+} 
+function handleAction(lobbyInfo){
+    log(`Incoming message by/for ${lobbyInfo.requestID || lobbyInfo.action || "Neither"}`);
+
+    //Handle specific requests/responses
+    if (specificRequests.has(lobbyInfo.requestId)){
+        specificRequests.get(lobbyInfo.requestId).resolve(lobbyInfo);
+        specificRequests.delete(lobbyInfo.requestId);
+    } //Handle broad responses
+    else{
+        switch(lobbyInfo.action){
+            case "updatedMessages":
+                lobbies.set(lobbyInfo.id, lobbyInfo.messages);
+                break;
+            case "newLobby":
+                lobbies.set(lobbyInfo.id, lobbyInfo.messages);
+                break;
+        }
     }
-    specificRequests.clear();
-});
+}
 function writeToServer(data){
     log("TCP SEND: " + JSON.stringify(data));
     client.write(JSON.stringify(data) + "\n");
@@ -134,7 +160,6 @@ app.get('/newLobby', async (req, res) => {
     } catch(error){
         console.log("New lobby error")
     }
-    console.log(newLobbyData);
     lobbies.set(newLobbyData.id, newLobbyData.messages);
     res.json(newLobbyData);
 });
@@ -158,7 +183,7 @@ app.post('/uploadMessage', async (req, res) => {
     } catch (error){
         console.log("Error");
     }
-
+    lobbies.set(newData.id, newData.messages);
     res.json(newData);
 });
 app.get("/hostname", (req, res)=>{
@@ -166,4 +191,6 @@ app.get("/hostname", (req, res)=>{
     res.json({ hostName: hostName });
     //log("HOSTNAME receive");
 })
+
+connectToDatabase();
 app.listen(API_SERVER_PORT, () => console.log(`http://localhost:${API_SERVER_PORT}`));
