@@ -5,7 +5,7 @@
             "type": "node",
             "request": "launch", 
             "name": "Debug Lobby Server",
-            "program": "${workspaceFolder}/Server/server.js"
+            "program": "${workspaceFolder}/Server/serverParts/APIServer.js"
 
         }
     ]
