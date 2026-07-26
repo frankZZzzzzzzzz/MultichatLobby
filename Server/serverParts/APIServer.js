@@ -8,7 +8,7 @@ const os = require("os");
 
 const DATABASE_PORT = Number(process.env.DATABASE_PORT) || 3000;
 const DATABASE_IP = process.env.DATABASE_IP || "localhost"
-const API_SERVER_PORT = Number(process.env.API_SERVER_PORT) || 3000;
+const API_SERVER_PORT = Number(process.env.API_SERVER_PORT) || 3001;
 
 //Local Cache
 const lobbies = new Map();
@@ -59,6 +59,18 @@ client.on("data", (data)=>{
         }
     });
 });
+client.on("error", (err) => {
+    console.log("Database TCP error:", err.message);
+});
+client.on("close", () => {
+    console.log("Database TCP connection closed");
+
+    // Delete all specific requests
+    for (const [, request] of specificRequests) {
+        request.reject(new Error("TCP connection closed"));
+    }
+    specificRequests.clear();
+});
 function writeToServer(data){
     log("TCP SEND: " + JSON.stringify(data));
     client.write(JSON.stringify(data) + "\n");
@@ -90,6 +102,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "../../Website")));
 
 app.get('/getMessages', (req, res) => {
+    //log("GET MESSAGES");
     const id = Number(req.query.id);
 
     if (!lobbies.has(id)){
@@ -108,6 +121,7 @@ app.get('/getMessages', (req, res) => {
     });
 });
 app.get('/newLobby', async (req, res) => {
+    //log("NEW MESSAGE");
     let newLobbyData;
     try{
         newLobbyData = await sendAndWaitforResponse({action: "newLobby", status: null});
@@ -120,6 +134,7 @@ app.get('/newLobby', async (req, res) => {
     res.json(newLobbyData);
 });
 app.post('/uploadMessage', async (req, res) => {
+    //log("UPLOAD");
     const id = Number(req.body.id);
     const message = req.body.message
 
@@ -142,6 +157,8 @@ app.post('/uploadMessage', async (req, res) => {
     res.json(newData);
 });
 app.get("/hostname", (req, res)=>{
+    //log("HOSTNAME get");
     res.json({ hostName: os.hostname() });
+    //log("HOSTNAME receive");
 })
-app.listen(3000, () => console.log('http://localhost:3000'));
+app.listen(API_SERVER_PORT, () => console.log(`http://localhost:${API_SERVER_PORT}`));

@@ -14,6 +14,7 @@ function log(message){
     console.log(`${(new Date).toISOString()}: ${message}`);
 }
 function broadcast(objData){
+    console.log(`Broadcasting to ${clients.values().length}: objData`);
     clients.forEach((clientSocket)=>{
         clientSocket.write(JSON.stringify(objData) + "\n");
     })
