@@ -13,10 +13,11 @@ const server = net.createServer()
 function log(message){
     console.log(`${(new Date).toISOString()}: ${message}`);
 }
-function broadcast(objData){
-    console.log(`Broadcasting to ${clients.values().length}: objData`);
+function broadcast(objData, exceptionSocket=null){
+    log(`Broadcasting to ${clients.size} clients: objData`);
     clients.forEach((clientSocket)=>{
-        clientSocket.write(JSON.stringify(objData) + "\n");
+        if (clientSocket !== exceptionSocket)
+            clientSocket.write(JSON.stringify(objData) + "\n");
     })
 }
 function handleAction(socket, data){
@@ -38,7 +39,7 @@ function handleAction(socket, data){
                 messages: lobbyMessages
             }
             socket.write(JSON.stringify(newData) + "\n")
-            broadcast(newData);
+            broadcast(newData, socket);
             log("Storage TCP send upload");
             break;
         case "newLobby":
@@ -69,7 +70,7 @@ function handleAction(socket, data){
 server.on("connection", (socket)=>{
     //Add client to list if connected and send all data for caching
     clients.add(socket);
-    console.log(`Socket Connected: ${socket.address()}`);
+    log(`Socket Connected: ${socket.remoteAddress}:${socket.remotePort}`);
 
     //Remove client from list if connection has been closed or error
     socket.on("close", ()=>clients.delete(socket));
