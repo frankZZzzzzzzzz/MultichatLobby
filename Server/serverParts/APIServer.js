@@ -83,14 +83,17 @@ function tryReconnecting(){
     setTimeout(()=>connectToDatabase(), RETRY_INTERVAL);
 } 
 function handleAction(lobbyInfo){
-    log(`Incoming message by/for ${lobbyInfo.requestID || lobbyInfo.action || "Neither"}`);
+    log(`Handling message by/for ${lobbyInfo.requestID || lobbyInfo.action || "Neither"}`);
+    log(JSON.stringify(lobbyInfo));
 
     //Handle specific requests/responses
-    if (specificRequests.has(lobbyInfo.requestId)){
+    if (lobbyInfo.requestId !== undefined && specificRequests.has(lobbyInfo.requestId)){
+        log("Specific Request")
         specificRequests.get(lobbyInfo.requestId).resolve(lobbyInfo);
         specificRequests.delete(lobbyInfo.requestId);
     } //Handle broad responses
     else{
+        log("Broad Request");
         switch(lobbyInfo.action){
             case "updatedMessages":
                 lobbies.set(Number(lobbyInfo.id), lobbyInfo.messages);
