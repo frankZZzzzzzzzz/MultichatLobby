@@ -50,8 +50,6 @@ function connectToDatabase(){
     //Handles Incoming data
     let dataInBuffer = "";
     client.on("data", (data)=>{
-        log("TCP Receive: " + data.toString());
-        
         dataInBuffer += data.toString();
         const messages = dataInBuffer.split("\n");
         dataInBuffer = messages.pop();
@@ -96,11 +94,17 @@ function handleAction(lobbyInfo){
         log("Broad Request");
         switch(lobbyInfo.action){
             case "updatedMessages":
+                log("Updated Messages")
                 lobbies.set(Number(lobbyInfo.id), lobbyInfo.messages);
+                log(JSON.stringify(lobbies.get(Number(lobbyInfo.id))));
                 break;
             case "newLobby":
+                log("New Lobby")
                 lobbies.set(Number(lobbyInfo.id), lobbyInfo.messages);
+                log(JSON.stringify(lobbies.get(Number(lobbyInfo.id))));
                 break;
+            default:
+                log("Somehow reached the end");
         }
     }
 }
