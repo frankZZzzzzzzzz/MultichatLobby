@@ -14,14 +14,14 @@ function log(message){
     console.log(`${(new Date).toISOString()}: ${message}`);
 }
 function broadcast(objData, exceptionSocket=null){
-    log(`Broadcasting to ${clients.size} clients: objData`);
+    //log(`Broadcasting to ${clients.size} clients: objData`);
     clients.forEach((clientSocket)=>{
         if (clientSocket !== exceptionSocket)
             clientSocket.write(JSON.stringify(objData) + "\n");
     });
 }
 function handleAction(socket, data){
-    log("Storage TCP receive");
+    //log("Storage TCP receive");
     switch(data.action){
         case "upload": 
             if (!lobbies.has(Number(data.id))){
@@ -50,7 +50,7 @@ function handleAction(socket, data){
                 messages: lobbyMessages
             }, socket);
 
-            log("Storage TCP send upload");
+            //log("Storage TCP send upload");
             break;
         case "newLobby":
             lobbies.set(offset, [`Lobby #: ${offset} first message!`]);
@@ -67,7 +67,7 @@ function handleAction(socket, data){
                 action: "newLobby", 
                 messages: lobbies.get(offset)
             }, socket);
-            log("Storage TCP send new lobby");
+            //log("Storage TCP send new lobby");
             offset++;
             break;
         case "load Cache":
@@ -76,7 +76,7 @@ function handleAction(socket, data){
                 lobbies: Object.fromEntries(lobbies)
             }
             socket.write(JSON.stringify(returnData) + "\n")
-            log("Storage TCP sent cache");
+            //log("Storage TCP sent cache");
             break;
     }
 

@@ -77,31 +77,28 @@ function tryReconnecting(){
     if (connected)
         return;
 
-    log(`Attempting to connect in ${RETRY_INTERVAL/1000} seconds`);
+    //log(`Attempting to connect in ${RETRY_INTERVAL/1000} seconds`);
     setTimeout(()=>connectToDatabase(), RETRY_INTERVAL);
 } 
 function handleAction(lobbyInfo){
-    log(`Handling message by/for ${lobbyInfo.requestID || lobbyInfo.action || "Neither"}`);
-    log(JSON.stringify(lobbyInfo));
+    //log(`Handling message by/for ${lobbyInfo.requestID || lobbyInfo.action || "Neither"}`);
 
     //Handle specific requests/responses
     if (lobbyInfo.requestId !== undefined){
-        log("Specific Request")
+        //log("Specific Request")
         specificRequests.get(Number(lobbyInfo.requestId)).resolve(lobbyInfo);
         specificRequests.delete(Number(lobbyInfo.requestId));
     } //Handle broad responses
     else{
-        log("Broad Request");
+        //log("Broad Request");
         switch(lobbyInfo.action){
             case "updatedMessages":
-                log("Updated Messages")
+                //log("Updated Messages")
                 lobbies.set(Number(lobbyInfo.id), lobbyInfo.messages);
-                log(JSON.stringify(lobbies.get(Number(lobbyInfo.id))));
                 break;
             case "newLobby":
-                log("New Lobby")
+                //log("New Lobby")
                 lobbies.set(Number(lobbyInfo.id), lobbyInfo.messages);
-                log(JSON.stringify(lobbies.get(Number(lobbyInfo.id))));
                 break;
             default:
                 log("Somehow reached the end");
@@ -109,7 +106,7 @@ function handleAction(lobbyInfo){
     }
 }
 function writeToServer(data){
-    log("TCP SEND: " + JSON.stringify(data));
+    //log("TCP SEND: " + JSON.stringify(data));
     client.write(JSON.stringify(data) + "\n");
 }
 function sendAndWaitforResponse(data, maxWaitTime = 1000){
@@ -122,7 +119,6 @@ function sendAndWaitforResponse(data, maxWaitTime = 1000){
         }, maxWaitTime);
         specificRequests.set(requestId, {
             resolve: (data)=>{
-                log(data);
                 clearTimeout(timer);
                 resolve(data);
             }
