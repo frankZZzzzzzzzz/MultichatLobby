@@ -173,7 +173,7 @@ async function refreshMessages(){
     }
     const data = await fetchLobbyMessages(selectedLobbyId);
     
-    if (data.status === "ok")
+    if (data.status === "found")
         loadLobbyMessages(data.messages);
     refreshMessagePoller = setTimeout(refreshMessages, refreshMessageTime)
 }
