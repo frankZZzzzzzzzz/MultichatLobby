@@ -87,7 +87,7 @@ function handleAction(lobbyInfo){
     log(JSON.stringify(lobbyInfo));
 
     //Handle specific requests/responses
-    if (lobbyInfo.requestId !== undefined && specificRequests.has(lobbyInfo.requestId)){
+    if (lobbyInfo.requestId !== undefined){
         log("Specific Request")
         specificRequests.get(lobbyInfo.requestId).resolve(lobbyInfo);
         specificRequests.delete(lobbyInfo.requestId);
