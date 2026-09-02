@@ -1,15 +1,15 @@
-## Multichat Lobby
+# Multichat Lobby
 
 A simple web-based chat application where users can create and join different chat lobbies using a lobby ID.
 
-# Features
+## Features
 * Create new chat lobbies
 * Join existing lobbies using a lobby ID
 * Send messages in a lobby
 * Automatically refresh messages
 * Simple frontend and backend structure
 
-# Project Structure
+## Project Structure
 MultichatLobby/
 ├── Server/
 │   ├── serverParts/
@@ -22,11 +22,11 @@ MultichatLobby/
     ├── app.js
     └── style.css
 
-# Requirements
+## Requirements
 Node.js
 A modern web browser
 
-# Installation
+## Installation
 Clone the repository:
 ```sh
 git clone https://github.com/frankZZzzzzzzzz/MultichatLobby.git
@@ -39,7 +39,7 @@ cd Server
 npm install
 ```
 
-# Running the Servers
+## Running the Servers
 1. Start the Storage Server
 Start the storage server first. The API server depends on it.
 ```sh
@@ -71,7 +71,7 @@ GET /newLobby — creates a new lobby
 GET /getMessages?id=<id> — retrieves messages for a lobby
 POST /uploadMessage — sends a message to a lobby
 
-# Technologies
+## Technologies
 HTML
 CSS
 JavaScript
