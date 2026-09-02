@@ -10,17 +10,17 @@ A simple web-based chat application where users can create and join different ch
 * Simple frontend and backend structure
 
 ## Project Structure
-MultichatLobby/
-├── Server/
-│   ├── serverParts/
-│   ├── APILoadStress.js
-│   ├── package.json
-│   └── package-lock.json
+MultichatLobby/<br>
+├── Server/<br>
+│   ├── serverParts/<br>
+│   ├── APILoadStress.js<br>
+│   ├── package.json<br>
+│   └── package-lock.json<br>
 │
-└── Website/
-    ├── index.html
-    ├── app.js
-    └── style.css
+└── Website/<br>
+    ├── index.html<br>
+    ├── app.js<br>
+    └── style.css<br>
 
 ## Requirements
 Node.js
@@ -67,13 +67,13 @@ If you're hosting the API publicly, make sure the API server's port is accessibl
 
 The frontend communicates with the backend through endpoints such as:
 
-GET /newLobby — creates a new lobby
-GET /getMessages?id=<id> — retrieves messages for a lobby
-POST /uploadMessage — sends a message to a lobby
+GET /newLobby — creates a new lobby<br>
+GET /getMessages?id=<id> — retrieves messages for a lobby<br>
+POST /uploadMessage — sends a message to a lobby<br>
 
 ## Technologies
-HTML
-CSS
-JavaScript
-Node.js
-Express
+HTML<br>
+CSS<br>
+JavaScript<br>
+Node.js<br>
+Express<br>
