@@ -10,6 +10,7 @@ A simple web-based chat application where users can create and join different ch
 * Simple frontend and backend structure
 
 ## Project Structure
+```text
 MultichatLobby/<br>
 ├── Server/<br>
 │   ├── serverParts/<br>
@@ -21,6 +22,7 @@ MultichatLobby/<br>
     ├── index.html<br>
     ├── app.js<br>
     └── style.css<br>
+```
 
 ## Requirements
 Node.js
