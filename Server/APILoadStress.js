@@ -1,4 +1,4 @@
-const API_URL = `http://workshop-alb-330242433.us-east-1.elb.amazonaws.com/`
+const API_URL = ``
 
 async function API_CALL(){
     try{
