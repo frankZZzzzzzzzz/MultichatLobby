@@ -48,13 +48,13 @@ Start the storage server first. The API server depends on it.
 node serverParts/storageServer.js
 ```
 
-1. Start the API Server
+2. Start the API Server
 In a new terminal, start the API server:
 ```sh
 node serverParts/apiServer.js
 ```
 
-1. Connect to the API Server
+3. Connect to the API Server
 Open a browser and http into the API server using either:
 
 http://localhost:<API_PORT>
